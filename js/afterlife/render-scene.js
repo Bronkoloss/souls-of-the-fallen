@@ -62,11 +62,12 @@ const AfterlifeRenderScene = (() => {
       });
     }
 
-    // Spieler
+    // Spieler (Spielerin — erscheint im Jenseits als Frau)
     list.push({
       y: S.playerA.y,
       fn: () => {
-        Characters.drawHero(ctx, {
+        Characters.drawWoman(ctx, {
+          design: S.playerA.d,
           x: S.playerA.x - S.cam.x, y: S.playerA.y - S.cam.y,
           s: 1.05,
           time: S.time,
@@ -74,6 +75,7 @@ const AfterlifeRenderScene = (() => {
           moving: S.playerA.moving,
           facing: S.playerA.facing,
           pose: S.playerA.danceT > 0 ? "dance" : "idle",
+          lookX: S.playerA.facing * 0.6,
         });
       },
     });

@@ -23,6 +23,8 @@ const AfterlifeEnter = (() => {
     S.playerA = {
       x: C.SPAWN.x, y: C.SPAWN.y,
       walk: 0, facing: 1, moving: false, danceT: 0,
+      // Die Spielerin erscheint im Jenseits ebenfalls als Frau
+      d: Characters.makeWoman(0xA11CE),
     };
 
     // NPCs aus gespeicherten Seelen erschaffen

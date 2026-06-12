@@ -32,6 +32,9 @@ const CharacterWoman = (() => {
       lipColor: "#b3556a",
       scale: 0.92 + r() * 0.2,
       blushy: r() < 0.3,
+      // Figur: kräftigere Rundungen (Brust + Hüften), pro Seele leicht variiert
+      bust: 1.7 + r() * 0.7,
+      hips: 1.55 + r() * 0.55,
     };
   }
 
@@ -331,76 +334,142 @@ const CharacterWoman = (() => {
     }
   }
 
-  // ---------- Outfit ----------
+  // ---------- Oberkörper-Rundungen (Brust) ----------
+  // Wird VOR dem Oberteil gezeichnet (nackte Haut), das Oberteil legt sich darüber.
+  function drawBust(c, d) {
+    const b = d.bust || 1;
+    const cy = SHOULDER + 6.5;
+    const rx = 4.4 * b, ry = 4.0 * b, sep = 3.2 * b;
+    // Hautrundungen
+    c.fillStyle = d.skin;
+    c.beginPath();
+    c.ellipse(-sep, cy, rx, ry, 0, 0, Math.PI * 2);
+    c.ellipse(sep, cy, rx, ry, 0, 0, Math.PI * 2);
+    c.fill();
+    // sanfte Schattierung unten für Volumen
+    c.fillStyle = d.skinShade;
+    c.globalAlpha = 0.35;
+    c.beginPath();
+    c.ellipse(-sep, cy + ry * 0.45, rx * 0.85, ry * 0.5, 0, 0, Math.PI);
+    c.ellipse(sep, cy + ry * 0.45, rx * 0.85, ry * 0.5, 0, 0, Math.PI);
+    c.fill();
+    c.globalAlpha = 1;
+    // Dekolleté-Linie zwischen den Rundungen
+    c.strokeStyle = d.skinShade;
+    c.lineWidth = 0.9;
+    c.lineCap = "round";
+    c.beginPath();
+    c.moveTo(0, cy - ry * 0.55);
+    c.lineTo(0, cy + ry * 0.65);
+    c.stroke();
+  }
+
+  // Bikini-/BH-Oberteil, das den Rundungen folgt
+  function drawTopCups(c, d, color) {
+    const b = d.bust || 1;
+    const cy = SHOULDER + 6.5;
+    const rx = 4.7 * b, ry = 4.2 * b, sep = 3.2 * b;
+    c.fillStyle = color;
+    c.beginPath();
+    c.ellipse(-sep, cy + 0.6, rx, ry, 0, Math.PI * 0.92, Math.PI * 2.08);
+    c.ellipse(sep, cy + 0.6, rx, ry, 0, Math.PI * 0.92, Math.PI * 2.08);
+    c.fill();
+    // Träger
+    c.strokeStyle = color;
+    c.lineWidth = 1.3;
+    c.beginPath();
+    c.moveTo(-sep - rx * 0.4, cy - ry); c.lineTo(-6.4, SHOULDER + 1.5);
+    c.moveTo(sep + rx * 0.4, cy - ry); c.lineTo(6.4, SHOULDER + 1.5);
+    c.stroke();
+  }
+
+  // ---------- Outfit (figurbetont & freizügig) ----------
   function drawOutfit(c, d, t, walk, moving) {
     const c1 = d.outfitColor, c2 = d.outfitColor2;
+    const hp = d.hips || 1;
     const hemWave = moving ? Math.sin(walk * 2) * 0.8 : Math.sin(t * 2) * 0.4;
+    // Hüft-/Po-Rundung (Haut) unter Taille, gibt Sanduhr-Silhouette
+    const drawHipCurve = () => {
+      c.fillStyle = d.skin;
+      c.beginPath();
+      c.ellipse(0, HIP + 2.5, 9.5 * hp, 6.5, 0, 0, Math.PI * 2);
+      c.fill();
+    };
     switch (d.outfit) {
       case "dress":
       case "sundress": {
+        // freizügiges Minikleid mit tiefem Dekolleté
+        drawBust(c, d);
+        // Halter-Top mit tiefem V — lässt Dekolleté frei
+        const b = d.bust || 1;
+        const cyB = SHOULDER + 6.5, rxB = 4.7 * b, ryB = 4.2 * b, sepB = 3.2 * b;
         c.fillStyle = c1;
         c.beginPath();
-        c.moveTo(-6.6, SHOULDER + 1);
-        c.lineTo(6.6, SHOULDER + 1);
-        c.lineTo(10.8 + hemWave, -6);
-        c.quadraticCurveTo(0, -3.6, -10.8 + hemWave, -6);
+        c.ellipse(-sepB, cyB + 0.6, rxB, ryB, 0, Math.PI * 0.95, Math.PI * 2.05);
+        c.ellipse(sepB, cyB + 0.6, rxB, ryB, 0, Math.PI * 0.95, Math.PI * 2.05);
+        c.fill();
+        // Neckholder-Träger zum Hals
+        c.strokeStyle = c1; c.lineWidth = 1.2; c.lineCap = "round";
+        c.beginPath();
+        c.moveTo(-sepB, cyB - ryB); c.lineTo(-1.5, SHOULDER + 0.5);
+        c.moveTo(sepB, cyB - ryB); c.lineTo(1.5, SHOULDER + 0.5);
+        c.stroke();
+        // schmaler Mieder-/Taillenteil + enger Minirock
+        c.fillStyle = c1;
+        c.beginPath();
+        c.moveTo(-3.5, SHOULDER + 11);
+        c.lineTo(3.5, SHOULDER + 11);
+        c.lineTo(9 * hp + hemWave, -8);
+        c.quadraticCurveTo(0, -5.5, -9 * hp + hemWave, -8);
         c.closePath();
         c.fill();
-        // Gürtel
+        // hohe Beinschlitze andeuten (Haut)
+        c.fillStyle = d.skin;
+        c.beginPath();
+        c.moveTo(-1.6, -9); c.lineTo(1.6, -9);
+        c.lineTo(2.4, -2); c.lineTo(-2.4, -2); c.closePath();
+        c.fill();
         c.fillStyle = c2;
-        c.fillRect(-7.6, -20.5, 15.2, 2.4);
-        if (d.outfit === "sundress") {
-          c.strokeStyle = "rgba(255,255,255,0.85)";
-          c.lineWidth = 1.6;
-          c.beginPath();
-          c.moveTo(-10.2 + hemWave, -6.6);
-          c.quadraticCurveTo(0, -4.2, 10.2 + hemWave, -6.6);
-          c.stroke();
-        }
+        c.fillRect(-5.5, -19.5, 11, 1.8);
         break;
       }
       case "topskirt": {
-        // Oberteil
+        // bauchfreies Crop-Top + Miniröckchen
+        drawBust(c, d);
+        drawTopCups(c, d, c1);
+        // schmaler Streifen Crop-Top unter der Brust
         c.fillStyle = c1;
-        rrect(c, -7, SHOULDER + 1, 14, 13.5, 3);
+        rrect(c, -5.5, SHOULDER + 11, 11, 3.5, 1.6);
         c.fill();
-        // Rock
+        drawHipCurve();
+        // Minirock
         c.fillStyle = c2;
         c.beginPath();
-        c.moveTo(-7.4, -19);
-        c.lineTo(7.4, -19);
-        c.lineTo(10.6 + hemWave, -7.5);
-        c.quadraticCurveTo(0, -5.4, -10.6 + hemWave, -7.5);
+        c.moveTo(-8 * hp, -15);
+        c.lineTo(8 * hp, -15);
+        c.lineTo(11 * hp + hemWave, -9);
+        c.quadraticCurveTo(0, -7, -11 * hp + hemWave, -9);
         c.closePath();
         c.fill();
         break;
       }
       case "overalls": {
-        // Shirt
-        c.fillStyle = c1;
-        rrect(c, -7, SHOULDER + 1, 14, 12, 3);
+        // geknotetes Bikini-/Bandeau-Top + sehr kurze Hotpants
+        drawBust(c, d);
+        drawTopCups(c, d, c1);
+        // Knoten in der Mitte
+        circle(c, 0, SHOULDER + 7, 1.6, shade(c1, 0.8));
+        drawHipCurve();
+        // Hotpants
+        c.fillStyle = c2;
+        rrect(c, -8 * hp, -16, 16 * hp, 8, 3);
         c.fill();
-        // Latzhose
-        const denim = "#5b79b8";
-        c.fillStyle = denim;
+        // Beinöffnungen
+        c.fillStyle = d.skin;
         c.beginPath();
-        c.moveTo(-7.2, -21);
-        c.lineTo(7.2, -21);
-        c.lineTo(8.6, -9);
-        c.lineTo(-8.6, -9);
-        c.closePath();
+        c.ellipse(-5 * hp, -8.5, 2.4, 2.2, 0, 0, Math.PI * 2);
+        c.ellipse(5 * hp, -8.5, 2.4, 2.2, 0, 0, Math.PI * 2);
         c.fill();
-        c.fillRect(-4.6, SHOULDER + 0.5, 9.2, 8);
-        c.strokeStyle = denim;
-        c.lineWidth = 2;
-        c.beginPath();
-        c.moveTo(-4, SHOULDER + 1);
-        c.lineTo(-6, SHOULDER - 1.5);
-        c.moveTo(4, SHOULDER + 1);
-        c.lineTo(6, SHOULDER - 1.5);
-        c.stroke();
-        circle(c, -3, SHOULDER + 2.4, 0.9, "#e3c44f");
-        circle(c, 3, SHOULDER + 2.4, 0.9, "#e3c44f");
         break;
       }
     }
@@ -426,11 +495,10 @@ const CharacterWoman = (() => {
     c.translate(0, -bob);
 
     drawBackHair(c, d, t);
-    const bareLegs = d.outfit !== "overalls";
+    const bareLegs = true; // alle Outfits zeigen jetzt Bein (Hotpants/Minirock/Minikleid)
     drawLegs(c, d.skinShade, d.shoeColor, walk, moving, bareLegs, "#46588c");
     drawOutfit(c, d, t, walk, moving);
-    const capColor = (d.outfit === "topskirt" || d.outfit === "overalls") ? d.outfitColor
-      : (d.outfit === "dress" ? d.outfitColor : null);
+    const capColor = null; // schulterfrei
     drawArms(c, d.skin, capColor, pose, t, walk, moving);
 
     c.save();
