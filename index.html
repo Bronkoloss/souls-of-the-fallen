@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Souls of the Fallen — Zombie Survival &amp; Jenseits</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="game-wrapper">
+    <canvas id="game"></canvas>
+
+    <!-- HUD: Survival-Phase -->
+    <div id="hud" class="hidden">
+      <div class="hud-left">
+        <div class="hud-item">
+          <span class="hud-label">Befreite Seelen</span>
+          <span id="hud-kills" class="hud-value">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Welle</span>
+          <span id="hud-wave" class="hud-value">1</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Waffe</span>
+          <span id="hud-weapon" class="hud-value hud-weapon">Pistole</span>
+        </div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-label">Leben</div>
+        <div id="health-bar"><div id="health-fill"></div></div>
+      </div>
+    </div>
+
+    <!-- HUD: Jenseits -->
+    <div id="hud-afterlife" class="hidden">
+      <div class="hud-left">
+        <div class="hud-item">
+          <span class="hud-label">Seelen im Jenseits</span>
+          <span id="hud-souls" class="hud-value">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Blumen</span>
+          <span id="hud-flowers" class="hud-value hud-flowers">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Beste Freundinnen</span>
+          <span id="hud-friends" class="hud-value hud-friends">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Steuerungs-Hinweis (Jenseits) -->
+    <div id="controls-hint" class="hidden">
+      <span><b>WASD</b> Bewegen</span>
+      <span><b>Shift</b> Rennen</span>
+      <span><b>E</b> Interagieren</span>
+      <span><b>Esc</b> Gespräch beenden</span>
+    </div>
+
+    <!-- Sound-Button -->
+    <button id="mute-btn" class="hidden" title="Sound an/aus">🔊</button>
+
+    <!-- Startbildschirm -->
+    <div id="start-screen" class="overlay">
+      <div class="panel">
+        <h1>Souls of the Fallen</h1>
+        <p class="subtitle">Die Zombies waren einmal Menschen. Befreie ihre Seelen.</p>
+        <div class="how-to">
+          <p><strong>Bewegen:</strong> WASD / Pfeiltasten</p>
+          <p><strong>Zielen &amp; Schießen:</strong> Maus / Linksklick halten</p>
+          <p><strong>Jenseits:</strong> E — Interagieren, Shift — Rennen</p>
+        </div>
+        <p class="lore">
+          Du bist in einem verlassenen Hof gefangen, in dem immer mehr Untote
+          auftauchen. Jede befreite Seele wird im Jenseits als der Mensch
+          wiedergeboren, der sie einmal war. Dort, in einem wunderschönen Land,
+          geht es erst richtig los: Erkunde die Welt, lerne die Geretteten kennen,
+          erzähle Witze, tanze, verschenke Blumen — und kehre durch das Portal
+          zurück, um noch mehr Seelen zu befreien.
+        </p>
+        <div class="start-buttons">
+          <button id="start-btn" class="btn">Kampf beginnen</button>
+          <button id="enter-afterlife-btn" class="btn btn-soft hidden">Direkt ins Jenseits</button>
+        </div>
+        <p id="save-info" class="save-info hidden"></p>
+        <button id="reset-save-btn" class="link-btn hidden">Spielstand löschen</button>
+      </div>
+    </div>
+
+    <!-- Übergang: Gefallen -> Jenseits -->
+    <div id="transition-screen" class="overlay hidden">
+      <div class="panel afterlife-panel">
+        <h1>Deine Seele steigt auf …</h1>
+        <p id="transition-message" class="afterlife-message"></p>
+        <button id="to-afterlife-btn" class="btn btn-warm">Das Jenseits betreten</button>
+      </div>
+    </div>
+
+    <!-- Portal-Bestätigung -->
+    <div id="portal-screen" class="overlay hidden">
+      <div class="panel">
+        <h1 class="portal-title">Das Portal flackert …</h1>
+        <p class="afterlife-message portal-message">
+          Auf der anderen Seite warten noch unzählige gefangene Seelen.<br/>
+          Willst du zurück ins Diesseits und weitere befreien?
+        </p>
+        <div class="start-buttons">
+          <button id="portal-yes-btn" class="btn">Ja, ich bin bereit</button>
+          <button id="portal-no-btn" class="btn btn-soft">Noch nicht</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dialog-Panel (Jenseits) -->
+    <div id="dialog-panel" class="hidden">
+      <div class="dialog-head">
+        <canvas id="dialog-portrait" width="104" height="104"></canvas>
+        <div class="dialog-title">
+          <div class="dialog-name-row">
+            <span id="dialog-name">Name</span>
+            <span id="dialog-personality" class="dialog-personality"></span>
+          </div>
+          <div id="dialog-hearts" class="dialog-hearts"></div>
+        </div>
+      </div>
+      <p id="dialog-text"></p>
+      <div id="dialog-actions"></div>
+    </div>
+  </div>
+
+  <!-- Core -->
+  <script src="js/core/canvas.js"></script>
+  <script src="js/core/dom.js"></script>
+  <script src="js/core/save.js"></script>
+
+  <!-- Daten -->
+  <script src="js/data/names.js"></script>
+  <script src="js/data/backstories.js"></script>
+  <script src="js/data/jokes.js"></script>
+  <script src="js/data/personalities.js"></script>
+  <script src="js/data/ui-lines.js"></script>
+
+  <script src="js/audio.js"></script>
+
+  <!-- Charaktere -->
+  <script src="js/characters/draw-utils.js"></script>
+  <script src="js/characters/palettes.js"></script>
+  <script src="js/characters/woman.js"></script>
+  <script src="js/characters/hero.js"></script>
+  <script src="js/characters/zombie.js"></script>
+  <script src="js/characters/portrait.js"></script>
+  <script src="js/characters/index.js"></script>
+
+  <!-- Survival -->
+  <script src="js/survival/state.js"></script>
+  <script src="js/survival/weapons.js"></script>
+  <script src="js/survival/render.js"></script>
+  <script src="js/survival/index.js"></script>
+
+  <!-- Jenseits -->
+  <script src="js/afterlife/config.js"></script>
+  <script src="js/afterlife/state.js"></script>
+  <script src="js/afterlife/world.js"></script>
+  <script src="js/afterlife/friendship.js"></script>
+  <script src="js/afterlife/emotes.js"></script>
+  <script src="js/afterlife/enter.js"></script>
+  <script src="js/afterlife/update.js"></script>
+  <script src="js/afterlife/dialog.js"></script>
+  <script src="js/afterlife/render-terrain.js"></script>
+  <script src="js/afterlife/render-structures.js"></script>
+  <script src="js/afterlife/render-scene.js"></script>
+  <script src="js/afterlife/index.js"></script>
+
+  <script src="js/core/input.js"></script>
+
+  <!-- App -->
+  <script src="js/app/state.js"></script>
+  <script src="js/app/menu.js"></script>
+  <script src="js/app/handlers.js"></script>
+  <script src="js/app/loop.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
