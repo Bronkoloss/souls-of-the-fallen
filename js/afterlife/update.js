@@ -33,7 +33,7 @@ const AfterlifeUpdate = (() => {
 
   function updatePlayer(dt) {
     S.playerA.danceT = Math.max(0, S.playerA.danceT - dt);
-    if (S.dialogOpen) {
+    if (S.dialogOpen || (typeof AfterlifeIntimate !== "undefined" && AfterlifeIntimate.active())) {
       S.playerA.moving = false;
       return;
     }
@@ -204,6 +204,7 @@ const AfterlifeUpdate = (() => {
   function updatePrompt() {
     S.prompt = null;
     if (S.dialogOpen) return;
+    if (typeof AfterlifeIntimate !== "undefined" && AfterlifeIntimate.active()) return;
     // Portal
     if (dist(S.playerA.x, S.playerA.y, C.PORTAL.x, C.PORTAL.y + 40) < 95) {
       S.prompt = { text: "E — Portal ins Diesseits benutzen", x: C.PORTAL.x, y: C.PORTAL.y - 110, type: "portal" };

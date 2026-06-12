@@ -145,7 +145,6 @@ const AfterlifeDialog = (() => {
 
   function actFollow(npc) {
     if (S.followerSeed === npc.seed) {
-      S.followerSeed = null;
       npc.state = "idle";
       npc.idleT = 1;
       npc.homeX = npc.x;
@@ -160,11 +159,17 @@ const AfterlifeDialog = (() => {
     renderActions(npc);
   }
 
+  function actSeduce(npc) {
+    // Dialog schließen und ins Herzgespräch wechseln
+    closeDialog();
+    if (typeof startSeduction === "function") startSeduction(npc);
+  }
+
   function renderActions(npc) {
     dialogActions.innerHTML = "";
     const mk = (label, fn, opts = {}) => {
       const b = document.createElement("button");
-      b.className = "dialog-btn" + (opts.bye ? " bye" : "");
+      b.className = "dialog-btn" + (opts.bye ? " bye" : "") + (opts.intimate ? " intimate" : "");
       b.textContent = label;
       b.disabled = !!opts.disabled;
       b.addEventListener("click", () => fn(npc));
@@ -177,6 +182,8 @@ const AfterlifeDialog = (() => {
     mk(`🌸 Blume schenken (${Save.data.flowers})`, actGift, { disabled: Save.data.flowers <= 0 });
     if (hearts(npc.seed) >= 5) {
       mk(S.followerSeed === npc.seed ? "🛑 Warte hier" : "🚶‍♀️ Begleite mich", actFollow);
+      // Beste Freundin freigeschaltet — Herzgespräch
+      mk("💕 Herzgespräch …", actSeduce, { intimate: true });
     }
     mk("👋 Tschüss", () => closeDialog(), { bye: true });
   }

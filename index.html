@@ -127,6 +127,19 @@
       <p id="dialog-text"></p>
       <div id="dialog-actions"></div>
     </div>
+
+    <!-- Herzgespräch-Panel (verführerischer Dialog) -->
+    <div id="intimate-panel" class="hidden">
+      <div class="intimate-meter">
+        <div class="intimate-meter-track"><div id="intimate-meter-fill"></div></div>
+        <span id="intimate-meter-label">ein zartes Knistern</span>
+      </div>
+      <p id="intimate-text"></p>
+      <div id="intimate-choices"></div>
+    </div>
+
+    <!-- Abspann nach dem Fade -->
+    <div id="intimate-afterglow" class="hidden"></div>
   </div>
 
   <!-- Core -->
@@ -140,6 +153,7 @@
   <script src="js/data/jokes.js"></script>
   <script src="js/data/personalities.js"></script>
   <script src="js/data/ui-lines.js"></script>
+  <script src="js/data/seduction.js"></script>
 
   <script src="js/audio.js"></script>
 
@@ -167,6 +181,7 @@
   <script src="js/afterlife/enter.js"></script>
   <script src="js/afterlife/update.js"></script>
   <script src="js/afterlife/dialog.js"></script>
+  <script src="js/afterlife/intimate.js"></script>
   <script src="js/afterlife/render-terrain.js"></script>
   <script src="js/afterlife/render-structures.js"></script>
   <script src="js/afterlife/render-scene.js"></script>

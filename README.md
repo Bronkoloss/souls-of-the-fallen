@@ -43,9 +43,33 @@ Mit jeder Geretteten kann man (Taste `E` in ihrer Nähe):
 | 💃 Tanzen | Gemeinsame Tanzeinlage mit Musiknoten |
 | 🌸 Blume schenken | Großer Freundschaftsbonus (Blumen vorher sammeln!) |
 | 🚶‍♀️ Begleite mich | Beste Freundinnen (5 Herzen) folgen dir durch die Welt |
+| 💕 Herzgespräch | Beste Freundinnen (5 Herzen): ein fortlaufender, verführerischer Dialog |
 
 Freundschaft wird in **Herzen** (0–5) gemessen und dauerhaft gespeichert.
 Mit steigender Freundschaft schalten sich neue, persönlichere Dialoge frei.
+
+### 💕 Herzgespräch
+
+Sobald eine Gerettete zur **besten Freundin** (5 Herzen) geworden ist, schaltet
+sich das **Herzgespräch** frei — ein eigener Gesprächsmodus, der sich deutlich
+vom normalen Dialog unterscheidet:
+
+- Statt einzelner Aktionen wählt man aus **2–3 fortführenden Antworten**, die
+  sich zu einem **zusammenhängenden, fortlaufenden Gespräch** verweben.
+- Eine **Spannungsanzeige** ("ein zartes Knistern" → "atemlos") steigt mit jeder
+  Antwort — und fällt bei neckischen oder zurückhaltenden Optionen bewusst kurz
+  wieder ab. Dieses **Push & Pull** baut die Spannung Schritt für Schritt auf.
+- Antworten sind in drei Tönen eingefärbt: **forsch** (treibt voran), **neckend**
+  und **zurückhaltend** (löst die Spannung kurz, um sie danach umso mehr zu
+  steigern).
+- Jede der sieben Persönlichkeiten reagiert mit **eigenen Texten**.
+- Am Höhepunkt geht man **gemeinsam in ihr Haus** — eine private, in warmes
+  Kerzen- und Kaminlicht getauchte Innenraum-Szene, in der das Gespräch
+  weitergeht und schließlich in einem sanften **Fade-to-Black** mündet.
+- Belohnung: eine bleibende **Erinnerung** und ein Freundschaftsbonus.
+
+Der Ton ist bewusst **andeutend und atmosphärisch** — Spannung entsteht durch
+Stimmung, Worte und Andeutung, nicht durch explizite Darstellung.
 
 ### Persönlichkeiten
 
@@ -97,10 +121,10 @@ js/
 | Ordner | Inhalt |
 |--------|--------|
 | `core/` | `canvas.js`, `dom.js`, `input.js`, `save.js` |
-| `data/` | `names.js`, `backstories.js`, `jokes.js`, `personalities.js`, `ui-lines.js` |
+| `data/` | `names.js`, `backstories.js`, `jokes.js`, `personalities.js`, `ui-lines.js`, `seduction.js` |
 | `characters/` | Zeichen-Helfer, Paletten, Frau/Held/Zombie, Porträt |
 | `survival/` | Zustand, Waffen, Rendering, Spiel-Logik |
-| `afterlife/` | Config, Welt, Freundschaft, Dialog, Update, Rendering |
+| `afterlife/` | Config, Welt, Freundschaft, Dialog, Herzgespräch (`intimate.js`), Update, Rendering |
 | `app/` | Spielzustände, Menü, Event-Handler, Game-Loop |
 
 Der Ordner `save/` enthält eine unveränderte Kopie der ursprünglichen Monolith-Struktur.

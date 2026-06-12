@@ -7,6 +7,7 @@ const STATE = {
   SURVIVAL: "survival",
   TRANSITION: "transition",
   AFTERLIFE: "afterlife",
+  HOUSE: "house",
 };
 
 let state = STATE.MENU;

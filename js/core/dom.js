@@ -35,3 +35,10 @@ const dialogPersonality = document.getElementById("dialog-personality");
 const dialogHearts = document.getElementById("dialog-hearts");
 const dialogText = document.getElementById("dialog-text");
 const dialogActions = document.getElementById("dialog-actions");
+
+const intimatePanel = document.getElementById("intimate-panel");
+const intimateText = document.getElementById("intimate-text");
+const intimateChoices = document.getElementById("intimate-choices");
+const intimateMeterFill = document.getElementById("intimate-meter-fill");
+const intimateMeterLabel = document.getElementById("intimate-meter-label");
+const intimateAfterglow = document.getElementById("intimate-afterglow");

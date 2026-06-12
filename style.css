@@ -423,3 +423,163 @@ html, body {
   margin-left: auto;
   background: rgba(120, 120, 120, 0.12);
 }
+
+.dialog-btn.intimate {
+  background: linear-gradient(135deg, rgba(224, 96, 124, 0.28), rgba(150, 60, 160, 0.28));
+  box-shadow: inset 0 0 0 1px rgba(200, 80, 120, 0.45);
+  color: #8a2b52;
+}
+
+/* ---------- Herzgespräch-Panel ---------- */
+#intimate-panel {
+  position: absolute;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  width: min(680px, calc(100vw - 32px));
+  padding: 20px 22px 18px;
+  border-radius: 20px;
+  background: linear-gradient(165deg, rgba(40, 16, 28, 0.94), rgba(26, 10, 20, 0.96));
+  color: #f6e2e8;
+  box-shadow: 0 28px 70px rgba(20, 4, 12, 0.6), inset 0 0 0 1px rgba(255, 180, 200, 0.18),
+    0 0 60px rgba(220, 90, 130, 0.15);
+  z-index: 9;
+}
+
+.intimate-meter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.intimate-meter-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+#intimate-meter-fill {
+  height: 100%;
+  width: 12%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #f0a6c0, #e8517f 55%, #c0306a);
+  box-shadow: 0 0 12px rgba(232, 81, 127, 0.7);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#intimate-meter-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #f0a6c0;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+#intimate-text {
+  min-height: 70px;
+  font-size: 16px;
+  line-height: 1.62;
+  margin-bottom: 16px;
+}
+
+#intimate-text .seduce-reply {
+  color: #f2c7d4;
+  font-style: italic;
+}
+
+#intimate-text .seduce-line {
+  color: #fbeef2;
+}
+
+#intimate-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.seduce-btn {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #fbeef2;
+  background: linear-gradient(135deg, rgba(224, 96, 124, 0.22), rgba(150, 60, 160, 0.18));
+  box-shadow: inset 0 0 0 1px rgba(240, 160, 190, 0.28);
+  transition: background 0.14s ease, transform 0.1s ease, box-shadow 0.14s ease;
+}
+
+.seduce-btn:hover {
+  background: linear-gradient(135deg, rgba(232, 81, 127, 0.42), rgba(170, 70, 180, 0.36));
+  transform: translateY(-1px);
+  box-shadow: inset 0 0 0 1px rgba(255, 190, 210, 0.5), 0 6px 18px rgba(200, 50, 100, 0.25);
+}
+
+.seduce-btn.pull {
+  background: linear-gradient(135deg, rgba(120, 130, 200, 0.2), rgba(90, 110, 170, 0.16));
+  box-shadow: inset 0 0 0 1px rgba(170, 190, 240, 0.28);
+}
+
+.seduce-btn.tease {
+  background: linear-gradient(135deg, rgba(230, 160, 90, 0.2), rgba(200, 120, 150, 0.16));
+  box-shadow: inset 0 0 0 1px rgba(240, 200, 160, 0.28);
+}
+
+.seduce-btn.bye {
+  margin-top: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  color: rgba(246, 226, 232, 0.6);
+  font-size: 13px;
+  font-style: italic;
+}
+
+/* ---------- Abspann ---------- */
+#intimate-afterglow {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 40px;
+  text-align: center;
+  background: radial-gradient(ellipse at center, rgba(40, 16, 28, 0.5), rgba(0, 0, 0, 0.92));
+  z-index: 10;
+}
+
+.afterglow-text {
+  max-width: 620px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #f6e2e8;
+  font-style: italic;
+}
+
+.afterglow-reward {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f0a6c0;
+}
+
+.afterglow-reward span {
+  display: block;
+  margin-top: 4px;
+  font-weight: 500;
+  font-size: 13.5px;
+  color: rgba(246, 226, 232, 0.8);
+}
+
+#intimate-afterglow .seduce-btn {
+  text-align: center;
+  padding: 12px 28px;
+  flex: 0 0 auto;
+}

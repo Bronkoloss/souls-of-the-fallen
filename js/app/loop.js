@@ -15,6 +15,13 @@ function loop(now) {
   } else if (state === STATE.AFTERLIFE) {
     Afterlife.update(dt);
     Afterlife.draw();
+    if (AfterlifeIntimate.active()) {
+      AfterlifeIntimate.update(dt);
+      AfterlifeIntimate.drawFadeOverlay();
+    }
+  } else if (state === STATE.HOUSE) {
+    AfterlifeIntimate.update(dt);
+    AfterlifeIntimate.drawHouseScene();
   } else if (state === STATE.TRANSITION) {
     Survival.draw();
   } else {

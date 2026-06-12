@@ -55,9 +55,32 @@ Afterlife.onPortal = () => {
   portalScreen.classList.remove("hidden");
 };
 
+// ---------- Herzgespräch / Innenraum-Szene ----------
+// Startet das Herzgespräch. App bleibt vorerst im AFTERLIFE-State,
+// damit die Jenseits-Welt hinter dem weichen Fade weiter sichtbar ist.
+function startSeduction(npc) {
+  AudioFX.unlock();
+  AfterlifeIntimate.start(npc);
+}
+
+// Nach dem Fade-to-Black: in die private Innenraum-Szene wechseln.
+function enterHouseScene() {
+  state = STATE.HOUSE;
+  setHudVisibility();
+}
+
+// Innenraum verlassen — zurück ins Jenseits.
+function exitHouseScene() {
+  state = STATE.AFTERLIFE;
+  setHudVisibility();
+}
+
 window.addEventListener("keydown", (e) => {
   const k = e.key.toLowerCase();
   keys[k] = true;
+  if (AfterlifeIntimate.active()) {
+    return; // Im Herzgespräch / Innenraum nur Maus-Auswahl
+  }
   if (state === STATE.AFTERLIFE && portalScreen.classList.contains("hidden")) {
     if (k === "e") Afterlife.interact();
     if (k === "escape") Afterlife.closeDialog();
