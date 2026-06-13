@@ -3,7 +3,7 @@
 /* Persistenz — localStorage-Spielstand. */
 
 const Save = {
-  data: { souls: [], friendship: {}, flowers: 0, totalFreed: 0, bestWave: 1 },
+  data: { souls: [], friendship: {}, flowers: 0, totalFreed: 0, bestWave: 1, intimate: {}, fetishes: {}, maturity: 0 },
 
   load() {
     try {
@@ -24,7 +24,7 @@ const Save = {
   },
 
   reset() {
-    this.data = { souls: [], friendship: {}, flowers: 0, totalFreed: 0, bestWave: 1 };
+    this.data = { souls: [], friendship: {}, flowers: 0, totalFreed: 0, bestWave: 1, intimate: {}, fetishes: {}, maturity: 0 };
     this.write();
   },
 };

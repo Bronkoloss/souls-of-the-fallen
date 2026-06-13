@@ -12,10 +12,14 @@ const CharacterWoman = (() => {
     const outfitColor = pick(CharacterPalettes.OUTFIT_COLORS);
     let outfitColor2 = pick(CharacterPalettes.OUTFIT_COLORS);
     if (outfitColor2 === outfitColor) outfitColor2 = pick(CharacterPalettes.OUTFIT_COLORS);
+    const personalityKey = pick(PERSONALITY_KEYS);
+    const fetishOptions = PERSONALITIES[personalityKey].fetishPrefs || ["romantic"];
+    const fetish = fetishOptions[(r() * fetishOptions.length) | 0];
     return {
       seed,
       name: pick(FIRST_NAMES),
-      personality: pick(PERSONALITY_KEYS),
+      personality: personalityKey,
+      fetish,
       backstory: pick(BACKSTORIES),
       skin,
       skinShade: shade(skin, 0.82),

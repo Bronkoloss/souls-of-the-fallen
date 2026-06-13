@@ -124,6 +124,69 @@ const AfterlifeIntimate = (() => {
     { id: "zuhause", scene: "interior", maturity: 0, beats: () => HOUSE_BEATS, draw: null },
   ];
 
+  // M1-Stages (explizit romantisch): registrieren sich, sobald Maturity >= 1
+  function registerM1Stages() {
+    const already = STAGES.some(s => s.id === "entkleiden");
+    if (already) return;
+    STAGES.push(
+      { id: "entkleiden", scene: "interior", maturity: 1, beats: () => Seduction.BEATS_ENTKLEIDEN, draw: null },
+      { id: "erfuellung", scene: "interior", maturity: 1, beats: () => Seduction.BEATS_ERFUELLUNG, draw: null },
+    );
+  }
+
+  // M2-Stage (fetisch-spezifisch): wird dynamisch gebaut, basierend auf NPCs Fetisch
+  function buildFetishStage(npc) {
+    const fetishId = npc.d.fetish || "romantic";
+    const fetish = FETISHES[fetishId];
+    if (!fetish) return null;
+    const fetishBeats = Seduction.BEATS_M2[fetishId];
+    if (!fetishBeats) return null;
+    // Füge Intro als ersten Beat ein, dann die Scene-Beats
+    const introBeat = {
+      line: fetishBeats.intro || { default: "" },
+      choices: [],
+      isIntro: true,
+    };
+    // Füge die Intro als ersten Beat hinzu, gefolgt von den Scene-Beats
+    const allBeats = [introBeat, ...(fetishBeats.scene || [])];
+    // Stelle sicher, dass der letzte Beat einen fade/enter-Ausgang hat
+    if (allBeats.length > 1 && allBeats[allBeats.length - 1].choices) {
+      const lastBeat = allBeats[allBeats.length - 1];
+      const hasExit = lastBeat.choices.some(c => c.fade || c.enter);
+      if (!hasExit && lastBeat.choices.length > 0) {
+        lastBeat.choices[0].fade = true;
+      }
+    }
+    return {
+      id: "fetisch_" + fetishId,
+      scene: "interior",
+      maturity: fetish.maturity || 2,
+      beats: () => allBeats,
+      draw: null,
+    };
+  }
+
+  // M3-Stages (intensiv): registrieren sich, sobald Maturity >= 3
+  function registerM3Stages() {
+    const already = STAGES.some(s => s.id === "intensiv");
+    if (already) return;
+    // Generische M3-Intensiv-Szene (greift auf BEATS_M3 zu)
+    STAGES.push(
+      { id: "intensiv", scene: "interior", maturity: 3, beats: () => resolveM3Beats(st), draw: null },
+    );
+  }
+
+  function resolveM3Beats(runtimeState) {
+    if (!runtimeState || !runtimeState.npc) return [];
+    const fetishId = runtimeState.npc.d.fetish || "romantic";
+    const key = fetishId + "_M3";
+    const m3Data = Seduction.BEATS_M3[key];
+    if (m3Data && m3Data.scene) return m3Data.scene;
+    // Fallback: generische M3-Beats
+    const fallback = Seduction.BEATS_M3["rough_passionate_M3"];
+    return fallback ? fallback.scene : [];
+  }
+
   const hooks = {
     onStageEnter: null,
     onBeat: null,
@@ -134,6 +197,16 @@ const AfterlifeIntimate = (() => {
   };
 
   function maturityLevel() { return Save.data.maturity || 0; }
+
+  function autoUnlockMaturity() {
+    // Nach N Herzgesprächen steigt Maturity automatisch
+    const total = Object.values(Save.data.intimate || {}).reduce((a, b) => a + b, 0);
+    const prev = maturityLevel();
+    if (total >= 15 && prev < 3) { Save.data.maturity = 3; Save.write(); return 3; }
+    if (total >= 8 && prev < 2) { Save.data.maturity = 2; Save.write(); return 2; }
+    if (total >= 3 && prev < 1) { Save.data.maturity = 1; Save.write(); return 1; }
+    return prev;
+  }
 
   function registerStage(stage, atIndex) {
     if (atIndex == null) STAGES.push(stage);
@@ -156,21 +229,38 @@ const AfterlifeIntimate = (() => {
 
   // ---------- Start ----------
   function start(theNpc) {
+    // Maturity-Check: Stages für erreichte Level registrieren
+    const ml = maturityLevel();
+    if (ml >= 1) registerM1Stages();
+    if (ml >= 2) {
+      const fetishStage = buildFetishStage(theNpc);
+      if (fetishStage) {
+        // Ersetze vorherigen fetisch-stage, falls vorhanden
+        const existingIdx = STAGES.findIndex(s => s.id.startsWith("fetisch_"));
+        if (existingIdx >= 0) STAGES.splice(existingIdx, 1);
+        // Füge nach "erfuellung" ein (vorletzte Position vor ggf. M3)
+        const insertIdx = STAGES.findIndex(s => s.id === "erfuellung");
+        if (insertIdx >= 0) STAGES.splice(insertIdx + 1, 0, fetishStage);
+        else STAGES.push(fetishStage);
+      }
+    }
+    if (ml >= 3) registerM3Stages();
+
     st = {
       npc: theNpc,
-      stages: STAGES.filter((s) => (s.maturity || 0) <= maturityLevel()),
+      stages: STAGES.filter((s) => (s.maturity || 0) <= ml),
       stageIdx: 0,
       beats: null,
       idx: 0,
       tension: 12,
       peak: 12,
-      fade: 0,                // 0..1 Überblendung
-      fadeDir: 0,             // +1 ausblenden, -1 einblenden
-      pending: null,          // "stage" | "afterglow"
+      fade: 0,
+      fadeDir: 0,
+      pending: null,
       afterglow: false,
-      sceneT: 0,              // Zeit in der aktuellen Szene
-      crackleT: 0.4,          // Kamin-Ambience-Timer
-      beatT: 0.5,             // Herzschlag-Sound-Timer
+      sceneT: 0,
+      crackleT: 0.4,
+      beatT: 0.5,
     };
     st.beats = resolveBeats(st.stages[0]);
     setCinema(true);
@@ -406,7 +496,16 @@ const AfterlifeIntimate = (() => {
     if (!Save.data.intimate) Save.data.intimate = {};
     Save.data.intimate[theNpc.seed] = (Save.data.intimate[theNpc.seed] || 0) + 1;
     Save.data.friendship[theNpc.seed] = Math.min(30, (Save.data.friendship[theNpc.seed] || 0) + 3);
+    // Fetisch-Statistik tracken
+    if (!Save.data.fetishes) Save.data.fetishes = {};
+    const fid = theNpc.d.fetish || "romantic";
+    Save.data.fetishes[fid] = (Save.data.fetishes[fid] || 0) + 1;
     Save.write();
+    // Maturity-Check nach dem Herzgespräch
+    const newMl = autoUnlockMaturity();
+    if (newMl > 0 && st) {
+      st._maturityUnlocked = newMl;
+    }
   }
 
   // ---------- DOM / Panel ----------
@@ -469,6 +568,17 @@ const AfterlifeIntimate = (() => {
 
   function renderChoices(beat) {
     intimateChoices.innerHTML = "";
+    // Auto-Advance wenn der Beat keine Choices hat (z.B. Fetisch-Intro)
+    if (!beat.choices || beat.choices.length === 0) {
+      const next = document.createElement("button");
+      next.className = "seduce-btn";
+      next.textContent = "…";
+      next.style.opacity = "0.7";
+      next.style.fontStyle = "italic";
+      next.addEventListener("click", () => advanceBeat(""));
+      intimateChoices.appendChild(next);
+      return;
+    }
     beat.choices.forEach((ch, i) => {
       const b = document.createElement("button");
       b.className = "seduce-btn" + (ch.tone === "pull" ? " pull" : ch.tone === "tease" ? " tease" : "");
@@ -492,10 +602,16 @@ const AfterlifeIntimate = (() => {
     for (let i = 0; i < 11; i++) {
       heartsHtml += `<span style="left:${(4 + i * 8.7).toFixed(1)}%;animation-delay:${(i * 0.83).toFixed(2)}s;font-size:${13 + (i % 3) * 5}px">♥</span>`;
     }
+    let maturityNote = "";
+    if (st._maturityUnlocked && st._maturityUnlocked > 1) {
+      const labels = { 1: " Explizite Romantik", 2: " Fetisch-Szenen", 3: " Intensive Hingabe" };
+      maturityNote = `<p class="afterglow-maturity">✨ Neue Stufe erreicht:${labels[st._maturityUnlocked] || ""} — weitere Herzgespräche warten.</p>`;
+    }
     intimateAfterglow.innerHTML =
       `<div class="afterglow-hearts">${heartsHtml}</div>` +
       `<p class="afterglow-text">${Seduction.flavor(AFTERGLOW, d)}</p>` +
       `<p class="afterglow-reward">💕 Eine Nacht, die ihr beide nie vergesst. <span>+3 ❤ &amp; eine Erinnerung fürs Leben.</span></p>` +
+      maturityNote +
       `<button id="afterglow-close" class="seduce-btn">Den Morgen begrüßen ☀️</button>`;
     intimateAfterglow.classList.remove("hidden");
     document.getElementById("afterglow-close").addEventListener("click", () => finish());

@@ -6,6 +6,7 @@ const PERSONALITIES = {
   froehlich: {
     label: "fröhlich",
     emoji: "☀️",
+    fetishPrefs: ["exhibition", "roleplay_naughty", "sensory_play"],
     greet: [
       ["Oh, hallo! Ein neues Gesicht! Also … das Gesicht, das mich gerettet hat!", "Hi! Ist es hier nicht HERRLICH? Es ist immer herrlich!"],
       ["Da bist du ja wieder! Ich habe schon Ausschau gehalten!", "Hallo du! Die Sonne scheint, du bist da — perfekter Tag!"],
@@ -39,6 +40,7 @@ const PERSONALITIES = {
   schuechtern: {
     label: "schüchtern",
     emoji: "🌸",
+    fetishPrefs: ["praise_worship", "sensory_play", "romantic"],
     greet: [
       ["Oh … h-hallo. Du bist das, oder? Der mich … na ja … danke.", "*winkt ganz vorsichtig* Hallo …"],
       ["Hallo … schön, dass du wieder da bist. Wirklich.", "Oh! Du bist es. *lächelt in den Boden*"],
@@ -70,6 +72,7 @@ const PERSONALITIES = {
   frech: {
     label: "frech",
     emoji: "😏",
+    fetishPrefs: ["bondage_soft", "brat", "roleplay_power"],
     greet: [
       ["Na, wen haben wir denn da? Den Helden persönlich. Kein Autogramm, danke.", "Ah, der Retter. Lass mich raten: Du willst, dass ich 'danke' sage. Süß."],
       ["Sieh an, du schon wieder. Langsam glaube ich, du magst mich.", "Na, Held? Heute schon jemanden gerettet oder machst du Pause?"],
@@ -101,6 +104,7 @@ const PERSONALITIES = {
   vertraeumt: {
     label: "verträumt",
     emoji: "🌙",
+    fetishPrefs: ["romantic", "sensory_play", "praise_worship"],
     greet: [
       ["Hm? Oh … hallo. Ich habe gerade mit einer Wolke geredet. Sie lässt grüßen.", "Oh, du bist echt. Ich war mir kurz nicht sicher."],
       ["Ah, du bist zurück. Ich habe von dir geträumt. Du warst ein freundlicher Leuchtturm.", "Hallo … setz dich. Der Himmel macht heute wieder Kunst."],
@@ -132,6 +136,7 @@ const PERSONALITIES = {
   energisch: {
     label: "energisch",
     emoji: "⚡",
+    fetishPrefs: ["rough_passionate", "edging", "bondage_soft"],
     greet: [
       ["DA bist du! Perfektes Timing — ich wollte gerade den Hügel da besteigen. Mitkommen!", "Hey! Keine Zeit zu verlieren, das Paradies erkundet sich nicht von selbst!"],
       ["Mein Trainingspartner ist da! Heute: Wettrennen zum See. Verliererin grüßt die Enten.", "Na endlich! Ich habe schon drei Runden ums Dorf gedreht. DREI!"],
@@ -163,6 +168,7 @@ const PERSONALITIES = {
   weise: {
     label: "weise",
     emoji: "🦉",
+    fetishPrefs: ["roleplay_mentor", "praise_worship", "sensory_play"],
     greet: [
       ["Ah, der Wanderer zwischen den Welten. Setz dich, der Augenblick hat Zeit.", "Sei gegrüßt. Ich habe dich erwartet — oder jemanden wie dich. Die Genauigkeit lässt hier nach."],
       ["Willkommen zurück. Der Weg zeigt sich dem, der ihn geht. Du gehst ihn oft, fällt mir auf.", "Ah, du. Die Brücke knarrte vorhin — sie kündigt gute Gäste an."],
@@ -194,6 +200,7 @@ const PERSONALITIES = {
   chaotisch: {
     label: "chaotisch",
     emoji: "🎲",
+    fetishPrefs: ["brat", "exhibition", "roleplay_naughty"],
     greet: [
       ["HALLO! Warte — kenn ich dich? Ach, du bist der mit dem Lärm! Cool!", "Oh! Besuch! Ich habe nichts vorbereitet! Ich bereite NIE was vor! Perfekt!"],
       ["DU! Genau dich brauche ich! Halt mal kurz … ach, hab's schon fallen lassen. Egal! Hi!", "Da bist du ja! Ich wollte dir was erzählen. Es ist weg. Es kommt wieder. Bleib da!"],

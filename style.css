@@ -856,6 +856,15 @@ html, body {
   color: rgba(246, 226, 232, 0.8);
 }
 
+.afterglow-maturity {
+  margin-top: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffd166;
+  text-shadow: 0 0 12px rgba(255, 209, 102, 0.5);
+  animation: textReveal 1.4s ease 0.9s both;
+}
+
 #intimate-afterglow .seduce-btn {
   text-align: center;
   padding: 13px 32px;
