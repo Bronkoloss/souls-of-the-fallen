@@ -28,7 +28,10 @@ const CharacterZombie = (() => {
     c.rotate(lurch);
     const bob = Math.abs(Math.sin(walk)) * 1.4;
     c.translate(0, -bob);
-    if (o.hitFlash > 0) c.filter = "brightness(2) saturate(0.4)";
+    const filters = [];
+    if (o.filter) filters.push(o.filter);
+    if (o.hitFlash > 0) filters.push("brightness(2) saturate(0.4)");
+    if (filters.length) c.filter = filters.join(" ");
 
     // Beine — schlurfend, ungleich
     const sin = Math.sin(walk);

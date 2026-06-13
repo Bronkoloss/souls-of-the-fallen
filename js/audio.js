@@ -75,6 +75,15 @@ const AudioFX = (() => {
     heartbeat() { tone(58, 0.1, "sine", 0.4, 42); tone(52, 0.14, "sine", 0.34, 38, 0.17); },
     crackle()  { noise(0.05, 0.045, 420 + Math.random() * 500); },
     swell()    { tone(262, 0.7, "sine", 0.16, 330); tone(330, 0.8, "sine", 0.14, 415, 0.08); tone(523, 0.9, "sine", 0.1, 659, 0.16); },
+    // Erweiterter Kampfmodus
+    flame()   { noise(0.07, 0.1, 520 + Math.random() * 300); },
+    rail()    { tone(1400, 0.16, "sawtooth", 0.22, 180); noise(0.1, 0.3, 3200); },
+    boom()    { noise(0.4, 0.9, 700); tone(70, 0.35, "square", 0.3, 36); },
+    stomp()   { noise(0.22, 0.6, 280); tone(48, 0.3, "sine", 0.45, 30); },
+    roar()    { tone(110, 0.5, "sawtooth", 0.3, 60); noise(0.4, 0.35, 500); },
+    spit()    { tone(300, 0.1, "triangle", 0.2, 140); noise(0.08, 0.12, 1200); },
+    bolt()    { tone(880, 0.09, "sine", 0.18, 1320); tone(1100, 0.12, "sine", 0.12, 1760, 0.05); },
+    bloodmoon() { tone(98, 0.8, "sawtooth", 0.18, 65); tone(147, 0.9, "sine", 0.14, 98, 0.15); },
   };
 
   return {

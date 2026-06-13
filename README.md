@@ -10,8 +10,12 @@ denen man reden, lachen und tanzen kann.
 
 1. **Survival-Phase (Diesseits)** — Du stehst in einem verlassenen Hof, in dem
    immer mehr Untote auftauchen. Verteidige dich, sammle Waffen und Medikits
-   und befreie so viele Seelen wie möglich. Es gibt drei Zombie-Typen:
-   Läufer (schnell), normale Untote und Brocken (langsam, aber zäh).
+   und befreie so viele Seelen wie möglich. Es gibt fünf Zombie-Typen:
+   Läufer (schnell), normale Untote, Brocken (langsam, aber zäh),
+   **Kriecherinnen** (winzig, kommen im Rudel) und **Speierinnen** (halten
+   Abstand und spucken Säure). Alle **5 Wellen** erhebt sich ein **Koloss** —
+   ein Mini-Boss mit eigenem Lebensbalken, Bodenstampfer-Schockwelle und
+   vier gefangenen Seelen, der beim Tod eine Spezialwaffe hinterlässt.
 2. **Jenseits** — Sobald deine Lebensenergie aufgebraucht ist, steigt deine
    Seele auf. Im Jenseits erwachen alle befreiten Seelen als gerettete
    Menschen — jede mit einzigartigem Aussehen, Namen, Persönlichkeit und
@@ -19,6 +23,22 @@ denen man reden, lachen und tanzen kann.
 3. **Der Kreislauf** — Durch das Portal im Norden kehrst du ins Diesseits
    zurück und befreist weitere Seelen. Die Bevölkerung des Jenseits wächst
    mit jedem Durchlauf — der Spielstand wird automatisch gespeichert.
+
+## Der Kampf im Detail
+
+- **Waffen**: Pistole (unbegrenzt), MG, Schrotflinte, **Flammenwerfer**
+  (setzt Untote in Brand — Schaden über Zeit) und **Blitzlanze** (ein
+  Hitscan-Strahl, der alle Gegner in einer Linie durchschlägt).
+- **Explosive Fässer** tauchen in der Arena auf: anschießen, Untote in die
+  Nähe locken — und die Kettenreaktion genießen. Vorsicht, der Radius
+  trifft auch dich.
+- **🌕 Blutmond** — jede 7. Welle färbt sich die Arena rot: Die Untoten
+  rasen, aber jede befreite trägt **zwei** Seelen in sich.
+- **💕 Seelenwacht** — das Unerwartete: Deine **besten Freundinnen** (5
+  Herzen) aus dem Jenseits kehren als Schutzgeister zurück! Bis zu drei
+  von ihnen umschweben dich schimmernd und feuern zielsuchende
+  Seelenblitze auf die Untoten. Freundschaft zahlt sich im Kampf aus —
+  die beiden Welten greifen ineinander.
 
 ## Das Jenseits
 
