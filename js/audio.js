@@ -71,6 +71,10 @@ const AudioFX = (() => {
     flower()  { tone(740, 0.09, "sine", 0.22); tone(988, 0.14, "sine", 0.2, null, 0.08); },
     portal()  { tone(220, 0.5, "sine", 0.25, 440); tone(330, 0.5, "sine", 0.2, 660, 0.1); },
     wave()    { tone(392, 0.3, "triangle", 0.22, 523); },
+    // Herzgespräch-Atmosphäre
+    heartbeat() { tone(58, 0.1, "sine", 0.4, 42); tone(52, 0.14, "sine", 0.34, 38, 0.17); },
+    crackle()  { noise(0.05, 0.045, 420 + Math.random() * 500); },
+    swell()    { tone(262, 0.7, "sine", 0.16, 330); tone(330, 0.8, "sine", 0.14, 415, 0.08); tone(523, 0.9, "sine", 0.1, 659, 0.16); },
   };
 
   return {

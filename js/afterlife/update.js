@@ -24,16 +24,27 @@ const AfterlifeUpdate = (() => {
     updateCampfire(dt);
     updatePrompt();
 
-    // Kamera weich nachführen
-    const tx = Math.max(0, Math.min(C.WORLD.w - W, S.playerA.x - W / 2));
-    const ty = Math.max(0, Math.min(C.WORLD.h - H, S.playerA.y - H / 2));
-    S.cam.x += (tx - S.cam.x) * Math.min(1, dt * 5);
-    S.cam.y += (ty - S.cam.y) * Math.min(1, dt * 5);
+    // Kamera weich nachführen — im Herzgespräch auf das Paar zentrieren
+    let fx = S.playerA.x, fy = S.playerA.y;
+    const focus = typeof AfterlifeIntimate !== "undefined" ? AfterlifeIntimate.focusPoint() : null;
+    if (focus) { fx = focus.x; fy = focus.y; }
+    const tx = Math.max(0, Math.min(C.WORLD.w - W, fx - W / 2));
+    const ty = Math.max(0, Math.min(C.WORLD.h - H, fy - H / 2));
+    const ease = focus ? 1.8 : 5;
+    S.cam.x += (tx - S.cam.x) * Math.min(1, dt * ease);
+    S.cam.y += (ty - S.cam.y) * Math.min(1, dt * ease);
   }
 
   function updatePlayer(dt) {
     S.playerA.danceT = Math.max(0, S.playerA.danceT - dt);
-    if (S.dialogOpen || (typeof AfterlifeIntimate !== "undefined" && AfterlifeIntimate.active())) {
+    if (typeof AfterlifeIntimate !== "undefined" && AfterlifeIntimate.active()) {
+      // Im Herzgespräch: stehen bleiben und ihr zugewandt sein
+      S.playerA.moving = false;
+      const n = AfterlifeIntimate.npc();
+      if (n) S.playerA.facing = n.x >= S.playerA.x ? 1 : -1;
+      return;
+    }
+    if (S.dialogOpen) {
       S.playerA.moving = false;
       return;
     }
@@ -54,10 +65,22 @@ const AfterlifeUpdate = (() => {
   }
 
   function updateNpcs(dt) {
+    const intimateNpc = typeof AfterlifeIntimate !== "undefined" && AfterlifeIntimate.active()
+      ? AfterlifeIntimate.npc() : null;
+
     for (const n of S.npcs) {
       n.blushT = Math.max(0, n.blushT - dt);
       n.danceT = Math.max(0, n.danceT - dt);
       if (n.waveT >= 0) n.waveT = Math.min(3, n.waveT + dt);
+
+      // Im Herzgespräch: sie bleibt bei dir und sieht dich an
+      if (n === intimateNpc) {
+        n.moving = false;
+        n.state = "idle";
+        n.idleT = Math.max(n.idleT, 1);
+        n.facing = S.playerA.x >= n.x ? 1 : -1;
+        continue;
+      }
 
       if (n === S.activeNpc && S.dialogOpen) {
         n.facing = S.playerA.x >= n.x ? 1 : -1;

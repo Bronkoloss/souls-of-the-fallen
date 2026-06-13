@@ -71,6 +71,34 @@ vom normalen Dialog unterscheidet:
 Der Ton ist bewusst **andeutend und atmosphärisch** — Spannung entsteht durch
 Stimmung, Worte und Andeutung, nicht durch explizite Darstellung.
 
+#### Kino-Inszenierung
+
+Das Herzgespräch läuft als eigener **Kino-Modus**: Letterbox-Balken fahren
+ein, das HUD blendet aus, die Kamera zoomt sanft auf das Paar und zentriert
+es, eine Vignette dunkelt die Welt ab. Um die beiden herum steigen
+Glut-Funken und Herzchen auf. Das Panel zeigt **Porträt und Namen** der
+Partnerin; Leuchtfarbe, Herzschlag-Puls und ein hörbarer **Herzschlag**
+reagieren live auf die Spannung. Die Innenraum-Szene ist ein vollständig
+prozedurales Interieur: Kamin mit animierten Flammen und Funken, Mondfenster
+mit Lichtstrahl und Staubpartikeln, Lichterkette, Wein, Blumenvase — und
+zwei Silhouetten, die mit steigender Spannung näher zusammenrücken.
+
+#### Erweiterungs-Architektur (Stages & Hooks)
+
+Das Herzgespräch ist als **Stage-Folge** aufgebaut (`funke` → `zuhause` →
+Abspann) und gezielt erweiterbar — der ausführliche Leitfaden steht im
+Kopfkommentar von `js/afterlife/intimate.js`:
+
+- `AfterlifeIntimate.registerStage(stage)` fügt eigene Stages mit eigenen
+  Beats und optional **eigenem Szenen-Renderer** ein
+  (`AfterlifeIntimate.RenderHelpers` stellt alle Interieur-Ebenen bereit).
+- Jede Stage trägt einen **Reifegrad** (`maturity`); aktiv ist nur, was
+  `Save.data.maturity` (Standard `0`) erlaubt. Die mitgelieferten Inhalte
+  bleiben bewusst auf Stufe 0 (andeutend).
+- `AfterlifeIntimate.hooks` (`onStageEnter`, `onBeat`, `onChoice`,
+  `onClimax`, `onFinish`, `drawOverlay`) erlauben Eingriffe ohne
+  Engine-Änderungen.
+
 ### Persönlichkeiten
 
 Jede Gerettete hat eine von sieben Persönlichkeiten mit eigenen Dialogen:

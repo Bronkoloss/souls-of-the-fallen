@@ -128,11 +128,28 @@
       <div id="dialog-actions"></div>
     </div>
 
+    <!-- Kino-Elemente für das Herzgespräch (Letterbox + Vignette) -->
+    <div id="cinema-top" class="cinema-bar"></div>
+    <div id="cinema-bottom" class="cinema-bar"></div>
+    <div id="cinema-vignette"></div>
+
     <!-- Herzgespräch-Panel (verführerischer Dialog) -->
     <div id="intimate-panel" class="hidden">
-      <div class="intimate-meter">
-        <div class="intimate-meter-track"><div id="intimate-meter-fill"></div></div>
-        <span id="intimate-meter-label">ein zartes Knistern</span>
+      <div class="intimate-head">
+        <div class="intimate-portrait-ring">
+          <canvas id="intimate-portrait" width="104" height="104"></canvas>
+        </div>
+        <div class="intimate-title">
+          <div class="intimate-name-row">
+            <span id="intimate-name">—</span>
+            <span id="intimate-mood" class="intimate-mood"></span>
+          </div>
+          <div class="intimate-meter">
+            <span id="intimate-heart">❤</span>
+            <div class="intimate-meter-track"><div id="intimate-meter-fill"></div></div>
+            <span id="intimate-meter-label">ein zartes Knistern</span>
+          </div>
+        </div>
       </div>
       <p id="intimate-text"></p>
       <div id="intimate-choices"></div>

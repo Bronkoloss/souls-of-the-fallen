@@ -14,14 +14,25 @@ function loop(now) {
     if (state === STATE.SURVIVAL || state === STATE.TRANSITION) Survival.draw();
   } else if (state === STATE.AFTERLIFE) {
     Afterlife.update(dt);
-    Afterlife.draw();
-    if (AfterlifeIntimate.active()) {
-      AfterlifeIntimate.update(dt);
-      AfterlifeIntimate.drawFadeOverlay();
+    AfterlifeIntimate.ambient(dt);
+
+    // Sanfter Kino-Zoom während des Herzgesprächs
+    const z = AfterlifeIntimate.zoom();
+    const zoomed = z > 1.001;
+    if (zoomed) {
+      ctx.save();
+      ctx.translate(W / 2, H / 2);
+      ctx.scale(z, z);
+      ctx.translate(-W / 2, -H / 2);
     }
+    Afterlife.draw();
+    if (zoomed) ctx.restore();
+
+    if (AfterlifeIntimate.active()) AfterlifeIntimate.update(dt);
+    AfterlifeIntimate.drawCinematics();
   } else if (state === STATE.HOUSE) {
     AfterlifeIntimate.update(dt);
-    AfterlifeIntimate.drawHouseScene();
+    AfterlifeIntimate.drawStageScene();
   } else if (state === STATE.TRANSITION) {
     Survival.draw();
   } else {

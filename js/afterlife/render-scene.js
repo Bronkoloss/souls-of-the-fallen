@@ -86,9 +86,12 @@ const AfterlifeRenderScene = (() => {
     // Schmetterlinge (über allem)
     for (const b of S.butterflies) if (inView(b.x, b.y, 40)) R.drawButterfly(b);
 
+    // Kino-Modus (Herzgespräch): Minimap & Namen ausblenden
+    const cine = typeof AfterlifeIntimate !== "undefined" && AfterlifeIntimate.cinema();
+
     // Namen über nahen NPCs
     ctx.textAlign = "center";
-    for (const n of S.npcs) {
+    if (!cine) for (const n of S.npcs) {
       const d = dist(n.x, n.y, S.playerA.x, S.playerA.y);
       if (d < 190 && inView(n.x, n.y)) {
         const alpha = Math.min(1, (190 - d) / 70);
@@ -150,7 +153,7 @@ const AfterlifeRenderScene = (() => {
       ctx.fill();
     }
 
-    drawMinimap();
+    if (!cine) drawMinimap();
 
     // Intro-Text
     if (S.introT > 0) {

@@ -430,71 +430,273 @@ html, body {
   color: #8a2b52;
 }
 
+/* =====================================================================
+   Herzgespräch — Kino-Modus
+   Spannungsreaktive Variablen (von JS auf #game-wrapper gesetzt):
+     --glow       : Leuchtfarbe (rgba), wandert mit der Spannung
+                    von zartem Rosé zu tiefem Rot
+     --glow-soft  : dieselbe Farbe, stark abgeschwächt
+     --beat       : Herzschlag-Dauer in s (wird mit Spannung schneller)
+   ===================================================================== */
+
+/* ---------- Letterbox-Balken ---------- */
+.cinema-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  background: #050309;
+  z-index: 7;
+  pointer-events: none;
+  transition: height 1.1s cubic-bezier(0.6, 0, 0.25, 1);
+}
+
+#cinema-top { top: 0; }
+#cinema-bottom { bottom: 0; }
+
+.cinema-on #cinema-top,
+.cinema-on #cinema-bottom {
+  height: 60px;
+}
+
+/* ---------- Vignette über der Welt ---------- */
+#cinema-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+  background: radial-gradient(ellipse at 50% 40%,
+    transparent 30%,
+    rgba(14, 4, 14, 0.42) 68%,
+    rgba(6, 2, 9, 0.82) 100%);
+  box-shadow: inset 0 0 220px var(--glow-soft, rgba(232, 81, 127, 0));
+}
+
+.cinema-on #cinema-vignette {
+  opacity: 1;
+}
+
+/* ---------- HUD weich ausblenden ---------- */
+#hud-afterlife,
+#controls-hint,
+#mute-btn {
+  transition: opacity 0.7s ease;
+}
+
+.cinema-on #hud-afterlife,
+.cinema-on #controls-hint,
+.cinema-on #mute-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ---------- Herzgespräch-Panel ---------- */
 #intimate-panel {
   position: absolute;
   left: 50%;
-  bottom: 26px;
+  bottom: 78px;
   transform: translateX(-50%);
-  width: min(680px, calc(100vw - 32px));
-  padding: 20px 22px 18px;
-  border-radius: 20px;
-  background: linear-gradient(165deg, rgba(40, 16, 28, 0.94), rgba(26, 10, 20, 0.96));
+  width: min(720px, calc(100vw - 36px));
+  padding: 20px 24px 20px;
+  border-radius: 22px;
+  background:
+    linear-gradient(165deg, rgba(38, 13, 27, 0.88), rgba(22, 8, 19, 0.93) 60%, rgba(15, 5, 14, 0.95));
+  backdrop-filter: blur(14px) saturate(1.25);
+  -webkit-backdrop-filter: blur(14px) saturate(1.25);
   color: #f6e2e8;
-  box-shadow: 0 28px 70px rgba(20, 4, 12, 0.6), inset 0 0 0 1px rgba(255, 180, 200, 0.18),
-    0 0 60px rgba(220, 90, 130, 0.15);
+  box-shadow:
+    0 30px 80px rgba(10, 2, 8, 0.7),
+    inset 0 0 0 1px rgba(255, 170, 200, 0.14),
+    inset 0 1px 0 rgba(255, 210, 225, 0.12),
+    0 0 70px var(--glow-soft, rgba(220, 90, 130, 0.12));
   z-index: 9;
+  animation: panelBreathe var(--beat, 1.6s) ease-in-out infinite;
 }
 
+@keyframes panelBreathe {
+  0%, 100% { box-shadow:
+    0 30px 80px rgba(10, 2, 8, 0.7),
+    inset 0 0 0 1px rgba(255, 170, 200, 0.14),
+    inset 0 1px 0 rgba(255, 210, 225, 0.12),
+    0 0 60px var(--glow-soft, rgba(220, 90, 130, 0.12)); }
+  50% { box-shadow:
+    0 30px 80px rgba(10, 2, 8, 0.7),
+    inset 0 0 0 1px rgba(255, 170, 200, 0.2),
+    inset 0 1px 0 rgba(255, 210, 225, 0.12),
+    0 0 95px var(--glow, rgba(220, 90, 130, 0.22)); }
+}
+
+/* ---------- Kopfzeile: Porträt + Name + Spannung ---------- */
+.intimate-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.intimate-portrait-ring {
+  flex: 0 0 auto;
+  padding: 3px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #e8517f, #9a4fd0, #f0a6c0, #e8517f);
+  box-shadow: 0 0 24px var(--glow-soft, rgba(232, 81, 127, 0.3));
+  animation: ringSpin 9s linear infinite;
+}
+
+@keyframes ringSpin {
+  to { filter: hue-rotate(20deg) brightness(1.12); }
+}
+
+#intimate-portrait {
+  display: block;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 30%, #4a1f33, #27101e);
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.5);
+}
+
+.intimate-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.intimate-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+#intimate-name {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  background: linear-gradient(90deg, #ffd9e4, #f0a6c0 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.intimate-mood {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  padding: 3px 11px;
+  border-radius: 99px;
+  color: #f0bdd0;
+  background: rgba(232, 81, 127, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(240, 166, 192, 0.25);
+}
+
+/* ---------- Spannungs-Meter ---------- */
 .intimate-meter {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
+  gap: 11px;
+}
+
+#intimate-heart {
+  font-size: 17px;
+  color: #e8517f;
+  text-shadow: 0 0 12px var(--glow, rgba(232, 81, 127, 0.8));
+  animation: heartPulse var(--beat, 1.6s) ease-in-out infinite;
+}
+
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.28); }
+  28% { transform: scale(1.04); }
+  42% { transform: scale(1.18); }
+  56% { transform: scale(1); }
 }
 
 .intimate-meter-track {
   flex: 1;
-  height: 8px;
+  position: relative;
+  height: 9px;
   border-radius: 99px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.45);
   overflow: hidden;
 }
 
 #intimate-meter-fill {
+  position: relative;
   height: 100%;
   width: 12%;
   border-radius: 99px;
-  background: linear-gradient(90deg, #f0a6c0, #e8517f 55%, #c0306a);
-  box-shadow: 0 0 12px rgba(232, 81, 127, 0.7);
-  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(90deg, #f0a6c0, #e8517f 50%, #d4256a 80%, #b00d4f);
+  box-shadow: 0 0 14px var(--glow, rgba(232, 81, 127, 0.7));
+  transition: width 0.65s cubic-bezier(0.34, 1.3, 0.45, 1);
+  overflow: hidden;
+}
+
+#intimate-meter-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg,
+    transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: meterShimmer 2.6s ease-in-out infinite;
+}
+
+@keyframes meterShimmer {
+  0% { transform: translateX(-100%); }
+  55%, 100% { transform: translateX(100%); }
 }
 
 #intimate-meter-label {
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  color: #f0a6c0;
+  font-family: Georgia, serif;
+  font-size: 13px;
   font-style: italic;
+  letter-spacing: 0.4px;
+  color: #f0a6c0;
   white-space: nowrap;
+  text-shadow: 0 0 16px var(--glow-soft, rgba(232, 81, 127, 0.4));
+  transition: color 0.6s ease;
 }
 
+/* ---------- Erzähltext ---------- */
 #intimate-text {
-  min-height: 70px;
-  font-size: 16px;
-  line-height: 1.62;
+  min-height: 76px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16.5px;
+  line-height: 1.72;
+  letter-spacing: 0.15px;
   margin-bottom: 16px;
+  color: #fdeef3;
+}
+
+#intimate-text.reveal {
+  animation: textReveal 0.85s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+@keyframes textReveal {
+  from { opacity: 0; transform: translateY(10px); filter: blur(5px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
 #intimate-text .seduce-reply {
-  color: #f2c7d4;
+  display: block;
   font-style: italic;
+  font-size: 14.5px;
+  color: #e8b3c6;
+  padding: 2px 0 10px 14px;
+  border-left: 2px solid rgba(232, 81, 127, 0.4);
+  margin-bottom: 8px;
 }
 
 #intimate-text .seduce-line {
-  color: #fbeef2;
+  color: #fdeef3;
 }
 
+/* ---------- Antworten ---------- */
 #intimate-choices {
   display: flex;
   flex-direction: column;
@@ -503,42 +705,90 @@ html, body {
 
 .seduce-btn {
   appearance: none;
+  position: relative;
   border: none;
   cursor: pointer;
   text-align: left;
-  padding: 12px 16px;
-  border-radius: 12px;
+  padding: 12px 17px 12px 21px;
+  border-radius: 13px;
   font-size: 14.5px;
   font-weight: 600;
+  font-family: "Segoe UI", system-ui, sans-serif;
   color: #fbeef2;
-  background: linear-gradient(135deg, rgba(224, 96, 124, 0.22), rgba(150, 60, 160, 0.18));
-  box-shadow: inset 0 0 0 1px rgba(240, 160, 190, 0.28);
-  transition: background 0.14s ease, transform 0.1s ease, box-shadow 0.14s ease;
+  background: rgba(255, 235, 243, 0.045);
+  box-shadow: inset 0 0 0 1px rgba(240, 160, 190, 0.16);
+  overflow: hidden;
+  transition: background 0.18s ease, transform 0.14s ease, box-shadow 0.18s ease;
+  animation: choiceIn 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+@keyframes choiceIn {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Ton-Akzentleiste links */
+.seduce-btn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #e8517f, #c0306a);
+  box-shadow: 0 0 10px rgba(232, 81, 127, 0.7);
+  transition: width 0.16s ease;
 }
 
 .seduce-btn:hover {
-  background: linear-gradient(135deg, rgba(232, 81, 127, 0.42), rgba(170, 70, 180, 0.36));
-  transform: translateY(-1px);
-  box-shadow: inset 0 0 0 1px rgba(255, 190, 210, 0.5), 0 6px 18px rgba(200, 50, 100, 0.25);
+  background: linear-gradient(100deg, rgba(232, 81, 127, 0.26), rgba(150, 60, 160, 0.18));
+  transform: translateX(5px);
+  box-shadow: inset 0 0 0 1px rgba(255, 190, 210, 0.42), 0 6px 22px rgba(200, 50, 100, 0.3);
 }
 
-.seduce-btn.pull {
-  background: linear-gradient(135deg, rgba(120, 130, 200, 0.2), rgba(90, 110, 170, 0.16));
-  box-shadow: inset 0 0 0 1px rgba(170, 190, 240, 0.28);
+.seduce-btn:hover::before {
+  width: 5px;
 }
 
-.seduce-btn.tease {
-  background: linear-gradient(135deg, rgba(230, 160, 90, 0.2), rgba(200, 120, 150, 0.16));
-  box-shadow: inset 0 0 0 1px rgba(240, 200, 160, 0.28);
+.seduce-btn.pull::before {
+  background: linear-gradient(180deg, #8fa3e8, #5a6eb8);
+  box-shadow: 0 0 10px rgba(140, 160, 230, 0.6);
+}
+
+.seduce-btn.pull:hover {
+  background: linear-gradient(100deg, rgba(120, 140, 220, 0.22), rgba(90, 110, 180, 0.15));
+  box-shadow: inset 0 0 0 1px rgba(175, 195, 245, 0.4), 0 6px 22px rgba(95, 115, 200, 0.28);
+}
+
+.seduce-btn.tease::before {
+  background: linear-gradient(180deg, #f0bb74, #d68a52);
+  box-shadow: 0 0 10px rgba(240, 187, 116, 0.6);
+}
+
+.seduce-btn.tease:hover {
+  background: linear-gradient(100deg, rgba(235, 170, 100, 0.22), rgba(205, 125, 145, 0.16));
+  box-shadow: inset 0 0 0 1px rgba(245, 205, 165, 0.42), 0 6px 22px rgba(220, 150, 90, 0.26);
 }
 
 .seduce-btn.bye {
-  margin-top: 4px;
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-  color: rgba(246, 226, 232, 0.6);
-  font-size: 13px;
+  margin-top: 5px;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+  color: rgba(246, 226, 232, 0.5);
+  font-size: 12.5px;
   font-style: italic;
+  font-weight: 500;
+}
+
+.seduce-btn.bye::before {
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: none;
+}
+
+.seduce-btn.bye:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(246, 226, 232, 0.8);
+  transform: translateX(2px);
 }
 
 /* ---------- Abspann ---------- */
@@ -549,30 +799,58 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 18px;
+  gap: 22px;
   padding: 40px;
   text-align: center;
-  background: radial-gradient(ellipse at center, rgba(40, 16, 28, 0.5), rgba(0, 0, 0, 0.92));
+  background:
+    radial-gradient(ellipse at 50% 60%, rgba(64, 22, 40, 0.55), transparent 60%),
+    radial-gradient(ellipse at center, rgba(28, 9, 20, 0.88), rgba(2, 1, 4, 0.97));
   z-index: 10;
+  overflow: hidden;
+}
+
+.afterglow-hearts {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.afterglow-hearts span {
+  position: absolute;
+  bottom: -40px;
+  font-size: 18px;
+  color: rgba(240, 140, 175, 0.5);
+  text-shadow: 0 0 14px rgba(232, 81, 127, 0.6);
+  animation: heartFloat 9s linear infinite;
+}
+
+@keyframes heartFloat {
+  0% { transform: translateY(0) scale(0.7) rotate(-6deg); opacity: 0; }
+  12% { opacity: 0.8; }
+  80% { opacity: 0.5; }
+  100% { transform: translateY(-110vh) scale(1.15) rotate(8deg); opacity: 0; }
 }
 
 .afterglow-text {
-  max-width: 620px;
-  font-size: 18px;
-  line-height: 1.7;
+  max-width: 640px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 19px;
+  line-height: 1.78;
   color: #f6e2e8;
   font-style: italic;
+  animation: textReveal 1.6s ease both;
 }
 
 .afterglow-reward {
   font-size: 15px;
   font-weight: 700;
   color: #f0a6c0;
+  animation: textReveal 1.6s ease 0.7s both;
 }
 
 .afterglow-reward span {
   display: block;
-  margin-top: 4px;
+  margin-top: 5px;
   font-weight: 500;
   font-size: 13.5px;
   color: rgba(246, 226, 232, 0.8);
@@ -580,6 +858,7 @@ html, body {
 
 #intimate-afterglow .seduce-btn {
   text-align: center;
-  padding: 12px 28px;
+  padding: 13px 32px;
   flex: 0 0 auto;
+  animation: textReveal 1.4s ease 1.4s both;
 }

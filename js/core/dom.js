@@ -36,9 +36,15 @@ const dialogHearts = document.getElementById("dialog-hearts");
 const dialogText = document.getElementById("dialog-text");
 const dialogActions = document.getElementById("dialog-actions");
 
+const gameWrapper = document.getElementById("game-wrapper");
+
 const intimatePanel = document.getElementById("intimate-panel");
 const intimateText = document.getElementById("intimate-text");
 const intimateChoices = document.getElementById("intimate-choices");
 const intimateMeterFill = document.getElementById("intimate-meter-fill");
 const intimateMeterLabel = document.getElementById("intimate-meter-label");
 const intimateAfterglow = document.getElementById("intimate-afterglow");
+const intimatePortrait = document.getElementById("intimate-portrait");
+const intimateName = document.getElementById("intimate-name");
+const intimateMood = document.getElementById("intimate-mood");
+const intimateHeart = document.getElementById("intimate-heart");
